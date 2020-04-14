@@ -6,21 +6,9 @@
 #include <Adafruit_Sensor.h>
 //thermophile sensor for temperature
 #include "Adafruit_TMP006.h"
+
 //biosensor
 #include "SparkFun_Bio_Sensor_Hub_Library.h"
-//bme sensor for humidity
-#include <SPI.h>
-#include "Adafruit_BME680.h"
-
-#define BME_SCK 13
-#define BME_MISO 12
-#define BME_MOSI 11
-#define BME_CS 10
-#define SEALEVELPRESSURE_HPA (1013.25)
-
-Adafruit_BME680 bme; // I2C
-//Adafruit_BME680 bme(BME_CS); // hardware SPI
-//Adafruit_BME680 bme(BME_CS, BME_MOSI, BME_MISO,  BME_SCK);
 
 //Initializes the thermophile adafruit sensor
 Adafruit_TMP006 tmp006;
@@ -85,12 +73,12 @@ void setup() {
 void loop() {
   //Checks if thermophile is on
   checkMode();
-  
+ 
   // Grab temperature measurements and print them.
   float objt = tmp006.readObjTempC();
   Serial.print("Object Temperature: "); Serial.print(objt); Serial.println("*C");
-  float diet = tmp006.readDieTempC();
-  Serial.print("Die Temperature: "); Serial.print(diet); Serial.println("*C");
+//  float diet = tmp006.readDieTempC();
+//  Serial.print("Die Temperature: "); Serial.print(diet); Serial.println("*C");
 
    if (objt > 101){
     Serial.print("User temperature is too high");
@@ -110,10 +98,6 @@ void loop() {
    }
    }
   
-
-
-
-   
   delay(4000); // 4 seconds per reading for 16 samples per reading
 
 }

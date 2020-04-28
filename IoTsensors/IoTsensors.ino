@@ -6,6 +6,11 @@
 #include <Adafruit_Sensor.h>
 //thermophile sensor for temperature
 #include "Adafruit_TMP006.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+
 
 //biosensor
 #include "SparkFun_Bio_Sensor_Hub_Library.h"
@@ -32,7 +37,7 @@ bioData body;
  RESET -> PIN 4
  MFIO -> PIN 5
 */
-
+ofstream file_;
 void setup() {
   Serial.begin(9600);
 
@@ -71,34 +76,21 @@ void setup() {
 }
 
 void loop() {
+
+
   //Checks if thermophile is on
   checkMode();
- 
-  // Grab temperature measurements and print them.
+  // Grab temperature measurements
   float objt = tmp006.readObjTempC();
-  Serial.print("Object Temperature: "); Serial.print(objt); Serial.println("*C");
-//  float diet = tmp006.readDieTempC();
-//  Serial.print("Die Temperature: "); Serial.print(diet); Serial.println("*C");
-
-   if (objt > 101){
-    Serial.print("User temperature is too high");
-    Serial.print("Checking pupils for fatigue");
-    bool pupilsFatigued = false;
-    if (pupilsFatigued)
-    { //Uses pupil dilation to decide if further action is needed.
-
-        //Bio-sensor readings
-        body = bioHub.readBpm(); //readBpm() is saved to body biodata 
-
-        if (body.heartRate > 180 or body.oxygen < 90){
-          // User is too fatigued and must stop
-        }
-      //  Serial.println(body.confidence); 
-        Serial.println(body.status); 
-   }
-   }
+  body = bioHub.readBpm(); //readBpm() is saved to body biodata 
   
-  delay(4000); // 4 seconds per reading for 16 samples per reading
+  ofstream file_;
+  file_.open("biostats");
+  file_ << "Obj Temp: " + objt;
+  file_ << "Heart Rate: " + body.heartRate;
+  file_ << "Oxygen: " + body.oxygen;
+  file_.close(); 
+  delay(60000); // 1 minute per reading
 
 }
 

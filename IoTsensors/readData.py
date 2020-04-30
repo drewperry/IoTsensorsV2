@@ -1,4 +1,5 @@
 import re
+import requests
 
 allTemps = []
 curr_temp = 0
@@ -8,8 +9,10 @@ currHeartRate = 0
 
 allOx = []
 currOx = 0
+URL = ""
 
-#Reads line by line
+
+# Reads line by line
 def read_data():
     biostats = open(r"biostats.txt", "r")
     stats = biostats.readlines()
@@ -30,6 +33,7 @@ def read_data():
             currOx = ox[0]
     biostats.close()
 
+
 def averages():
     temp_avg = sum(allTemps) / len(allTemps)
     hr_avg = sum(allHeartRate) / len(allHeartRate)
@@ -38,3 +42,12 @@ def averages():
     return [temp_avg, hr_avg, ox_avg]
 
 
+read_data()
+avg = averages()
+
+data = {'avg_THO': averages(),
+        'temp': curr_temp,
+        'heartrate': currHeartRate,
+        'oxygen': currOx}
+
+r = requests.post(url=URL, data=data)
